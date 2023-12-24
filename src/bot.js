@@ -1,5 +1,6 @@
-import "dotenv/config";
-import { Client, GatewayIntentBits, Collection } from "discord.js";
+import 'dotenv/config'
+import { Client, GatewayIntentBits, Collection } from 'discord.js'
+import { Handle } from './Util/handle.js'
 
 export class Bot extends Client {
   constructor() {
@@ -14,12 +15,17 @@ export class Bot extends Client {
         GatewayIntentBits.GuildInvites,
         GatewayIntentBits.GuildModeration,
       ],
-    });
+    })
+
+    this.eventLoader = new Handle(this)
   }
 
-  start() {
-    super.login(process.env.BOT_TOKEN);
+  async start() {
+    await super.login(process.env.BOT_TOKEN)
+    await this.eventLoader.eventLoader()
   }
 }
 
-new Bot().start();
+const start = new Bot()
+
+await start.start()
