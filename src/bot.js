@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { Client, GatewayIntentBits, Collection } from 'discord.js'
-import { Handle } from './Util/handle.js'
+import { EventLoader } from './Util/eventLoader.js'
 
 export class Bot extends Client {
   constructor() {
@@ -17,12 +17,13 @@ export class Bot extends Client {
       ],
     })
 
-    this.eventLoader = new Handle(this)
+    this.eventLoader = new EventLoader(this)
   }
 
   async start() {
-    await super.login(process.env.BOT_TOKEN)
-    await this.eventLoader.eventLoader()
+    await super.login(process.env.BOT_TOKEN).then(async () => {
+      this.eventLoader.loadEvents()
+    })
   }
 }
 
